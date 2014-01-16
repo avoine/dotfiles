@@ -1,0 +1,14 @@
+[user]
+	name = Patrick Hetu
+	email = patrick.hetu@gmail.com
+[push]
+	default = simple
+[diff]
+	algorithm = patience
+    #external = diff.sh
+[init]
+	templatedir = ~/.git_template
+[alias]
+	ctags = !.git/hooks/ctags
+[branch]
+	autosetuprebase = always

@@ -1,0 +1,5 @@
+[behave]
+lang=fr
+stop=True
+#log_capture=False
+logging_level=ERROR
