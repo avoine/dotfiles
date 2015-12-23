@@ -7,47 +7,68 @@
   (setq-default
    ;; List of additional paths where to look for configuration layers.
    ;; Paths must have a trailing slash (ie. `~/.mycontribs/')
-   dotspacemacs-configuration-layer-path '()
+   dotspacemacs-configuration-layer-path '("~/repos/spacemacs/")
    ;; List of configuration layers to load. If it is the symbol `all' instead
    ;; of a list then all discovered layers will be installed.
    dotspacemacs-configuration-layers
    '(
+     avoine
      auto-completion
-     aggressive-indent
      emacs-lisp
+     racket
+     scheme
      python
+     django
+     latex
+;     ess
      html
      git
+     version-control
      gnus
-     ;; markdown
+     mu4e
      org
      syntax-checking
+     spell-checking
      shell
-     themes-megapack
-     perspectives)
+     rcirc
+     jabber
+     dash
+     geolocation
+     spacemacs-layouts)
    dotspacemacs-additional-packages
    '(
+     firefox-controller
+     exwm
+     keyfreq
+     tabbar
+;     evil-tabs
+;     ox-pandoc
+     ox-rst
+;     org-ehtml
+     ox-twbs
+     org-redmine
      rainbow-mode
-     zeal-at-point
      mu4e-maildirs-extension
-     elfeed
+     evil-paredit
      minimap
      ocodo-svg-modelines
      pdf-tools
      ztree
+     ample-theme
+;     sublimity
+     eval-in-repl
+     ssh
+     ob-http
+     mu4e-alert
      centered-window-mode)
-   ;; A list of packages and/or extensions that will not be install and loaded.
-dotspacemacs-excluded-packages '()
-   ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
-   ;; are declared in a layer which is not a member of
-   ;; the list `dotspacemacs-configuration-layers'
+   dotspacemacs-excluded-packages '()
    dotspacemacs-delete-orphan-packages t))
 
 (defun dotspacemacs/init ()
   "Initialization function.
 This function is called at the very startup of Spacemacs initialization
 before layers configuration."
-;;  (setq use-package-verbose t)
+  ;;  (setq use-package-verbose t)
   ;; This setq-default sexp is an exhaustive list of all the supported
   ;; spacemacs settings.
   (setq-default
@@ -71,7 +92,8 @@ before layers configuration."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(hc-zenburn
+   dotspacemacs-themes '(ample
+                         hc-zenburn
                          solarized-dark
                          leuven
                          monokai)
@@ -79,11 +101,11 @@ before layers configuration."
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
-   dotspacemacs-default-font '("Ubuntu Mono"
-                               :size 16
+   dotspacemacs-default-font '("Hack"
+                               :size 14
                                :weight normal
                                :width normal
-                               :powerline-scale 1.1)
+                               :powerline-scale 1)
    ;; The leader key
    dotspacemacs-leader-key "SPC"
    ;; The leader key accessible in `emacs state' and `insert state'
@@ -146,23 +168,27 @@ before layers configuration."
    dotspacemacs-default-package-repository nil
    )
   ;; User initialization goes here
-  )
 
-(defun dotspacemacs/config ()
+;;  (require 'org)
+;;  (defun test-after-change (begin end length)
+;;    (org-update-all-dblocks))
+;;  (add-hook 'org-mode-hook
+;;            (lambda ()
+;;              (add-hook 'after-change-functions 'test-after-change t nil)))
+
+  (setq org-confirm-babel-evaluate nil)
+
+  (setq org-ehtml-docroot "/home/patrick/public_org/")
+  (setq org-ehtml-everything-editable t)
+
+)
+
+(defun dotspacemacs/user-config ()
   (setq magit-repo-dirs '("~/repos/"))
 
-  ;; (require 'git-gutter-fringe)
-  ;; (setq git-gutter-fr:side 'right-fringe)
-  ;; (setq git-magit-status-fullscreen t)
-  ;; (setq git-enable-github-support t)
-  ;; (setq git-gutter-use-fringe t)
-  ;; (set-face-foreground 'git-gutter-fr:modified "blue")
-  ;; (set-face-foreground 'git-gutter-fr:added    "green")
-  ;; (set-face-foreground 'git-gutter-fr:deleted  "red")
-  ;; (global-git-gutter-mode t)
-  ;; (add-to-list 'git-gutter:update-hooks 'focus-in-hook)
-
   (setq global-hl-line-mode -1)
+  (setq echo-keystrokes 0.5)
+  (setq mouse-yank-at-point t)
 
   ;; (custom-persp "cms30"
   ;;  (progn
@@ -171,34 +197,21 @@ before layers configuration."
   ;;   (find-file "~/repos/sites/cms30/requirements.txt")
   ;;  ))
 
-  (evil-leader/set-key-for-mode 'python-mode "mhz" 'zeal-at-point)
+  ;;(evil-leader/set-key-for-mode 'python-mode "mhz" 'zeal-at-point)
   ;; (setq zeal-at-point-mode-alist (remove '(python-mode . "python3") zeal-at-point-mode-alist))
 
   ;; (global-set-key (kbd "<mouse-2>") 'x-primary-yank)
   (setq x-select-enable-primary t)
   (setq mouse-drag-copy-region t)
 
-  ;; Get email, and store in nnml
-  (setq gnus-secondary-select-methods
-        '(
-          (nnimap "auf"
-                  (nnimap-address
-                   "imap.ca.auf.org")
-                  (nnimap-server-port 993)
-                  (nnimap-stream ssl))
-          ))
+  (require 'tabbar)
+  (tabbar-mode t)
+  (setq tabbar-use-images nil)
+  (setq tabbar-buffer-groups-function nil)
+  (global-set-key (kbd "M-]") 'tabbar-forward)
+  (global-set-key (kbd "M-[") 'tabbar-backward)
 
-  ;; Send email via Gmail:
-  (setq message-send-mail-function 'smtpmail-send-it
-        smtpmail-default-smtp-server "smtp-sortant.ca.auf.org")
-
-  ;; Archive outgoing email in Sent folder on imap.gmail.com:
-  (setq gnus-message-archive-method '(nnimap "imap.ca.auf.org")
-        gnus-message-archive-group "Sent")
-
-  ;; store email in ~/gmail directory
-  (setq nnml-directory "/home/patrick/.auf")
-  (setq message-directory "/home/patrick/.auf")
+  ; eshell
 
   (defun term-send-r () (interactive) (term-send-raw-string "\C-r"))
   (defun term-send-c () (interactive) (term-send-raw-string "\C-c"))
@@ -211,6 +224,13 @@ before layers configuration."
   (evil-define-key 'insert term-raw-map (kbd "C-D") 'term-send-D)
   (evil-define-key 'insert term-raw-map (kbd "C-z") 'term-send-z)
 
+  (setq read-file-name-completion-ignore-case t)
+  (setq read-buffer-completion-ignore-case t)
+  (mapc (lambda (x)
+        (add-to-list 'completion-ignored-extensions x))
+      '(".aux" ".bbl" ".go" ".exe" ".pyc"))
+
+  ; mu4e
   (require 'mu4e)
 
   ;; Only needed if your maildir is _not_ ~/Maildir
@@ -230,122 +250,121 @@ before layers configuration."
 
   ;; smtp mail setting; these are the same that `gnus' uses.
   (setq
-  message-send-mail-function   'smtpmail-send-it
-  smtpmail-default-smtp-server "smtp-sortant.ca.auf.org"
-  smtpmail-smtp-server         "smtp-sortant.ca.auf.org"
-  smtpmail-local-domain        "auf.org")
+   message-send-mail-function   'smtpmail-send-it
+   smtpmail-default-smtp-server "smtp-sortant.ca.auf.org"
+   smtpmail-smtp-server         "smtp-sortant.ca.auf.org"
+   smtpmail-local-domain        "auf.org")
+
   (setq
-      mu4e-get-mail-command "offlineimap"   ;; or fetchmail, or ...
-      mu4e-update-interval 60)
+   mu4e-get-mail-command "offlineimap"   ;; or fetchmail, or ...
+   mu4e-update-interval nil)
 
   (mu4e-maildirs-extension)
-
-  (setq elfeed-feeds
-      '("https://news.ycombinator.com/rss"))
 
   (modify-syntax-entry ?- "w")
   (modify-syntax-entry ?~ "w")
   (modify-syntax-entry ?/ "w")
   (modify-syntax-entry ?_ "w")
 
-;;  (pdf-tools-install)
+  ;;  (pdf-tools-install)
   (setq global-auto-revert-mode t)
 
   (add-to-list 'evil-emacs-state-modes 'elfeed-search-mode)
   (add-to-list 'evil-emacs-state-modes 'ztree-mode)
+  (add-to-list 'evil-emacs-state-modes 'eww-mode)
+  (add-to-list 'evil-emacs-state-modes 'wl-folder-mode)
+  (add-to-list 'evil-emacs-state-modes 'wl-summary-mode)
+  (add-to-list 'evil-emacs-state-modes 'wl-plugged-mode)
+  (add-to-list 'evil-emacs-state-modes 'wl-news-mode)
 
   (setq helm-split-window-default-side 'left)
   (setq helm-split-window-in-side-p t)
-  (setq git-use-magit-next t)
   (setq web-mode-engines-alist
-      '(("django" . "\\.html\\'"))
-  )
+        '(("django" . "\\.html\\'")))
   (setq web-mode-markup-indent-offset 2)
   (setq web-mode-css-indent-offset 2)
   (setq web-mode-code-indent-offset 2)
   (setq minimap-update-delay 0)
   (setq minimap-window-location 'right)
+
+  (setq rcirc-enable-authinfo-support t)
+  (setq rcirc-server-alist
+        '(("localhost"
+           :nick "avoine"
+           :user "avoine"
+           :port "6667"
+           )))
+
+  (setq geiser-default-implementation 'guile)
+  (setq geiser-repl-use-other-window nil)
+  (setq geiser-guile-binary "/usr/bin/guile")
+  (setq geiser-guile-load-path (list "/usr/share/geiser/guile"
+                                     "/usr/share/guile/2.0/srfi"))
+  (setq geiser-active-implementations '(guile racket)
+        geiser-mode-smart-tab-p t
+        geiser-repl-autodoc-p t
+        geiser-repl-history-filename "~/.emacs.d/geiser-history"
+        geiser-repl-query-on-kill-p nil
+        geiser-implementations-alist
+        '(((regexp "\\.scm$") guile)
+          ((regexp "\\.ss$") guile)
+          ((regexp "\\.rkt$") racket)))
+
+  ;; set maximum indentation for description lists
+  (setq org-list-description-max-indent 5)
+
+  ;; prevent demoting heading also shifting text inside sections
+  (setq org-adapt-indentation nil)
+
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (python . t)
+     (sql . t)
+     (dot . t)
+     (scheme . t)
+;     (R . t)
+     (org . t)
+     (http . t)
+     (shell . t )))
+  (setq org-babel-shell-names 'bash)
+  (setq scroll-preserve-screen-position 'always)
+
+  (setq jabber-username "patrick.hetu")
+  (setq jabber-server "auf.org")
+
+  (setq jabber-history-enabled t)
+
+  (add-hook 'jabber-alert-message-hooks 'jabber-message-libnotify)
+
+  (setq shell-default-shell 'eshell)
+  (setq eshell-prefer-lisp-functions t)
+  (setq eshell-prefer-lisp-variables t)
+  (setq password-cache t) ; enable password caching
+  (setq password-cache-expiry 3600) ; for one hour (time in secs)
+
+  (display-time-mode 1)
+
+  (setq sunshine-location "Montreal, Canada")
+  (setq sunshine-appid "6b9778c84185d07c9040f691631b8587")
+  (setq sunshine-units 'metric)
+
+  (setq org-redmine-uri "https://redmine.auf.org")
+  (setq org-redmine-auth-api-key "e3127a14dd7155e3fb14849f08607e0ef51bb5a6")
+
+  (setq org-table-convert-region-max-lines 9999)
+  (setq org-export-with-sub-superscripts nil)
+  (require 'org)
+  (setq org-publish-project-alist
+  '(("html"
+     :base-directory "~/org/auf/owncloud/"
+     :base-extension "org"
+     :recursive t
+     :publishing-directory "~/public_html"
+     :publishing-function org-html-publish-to-html)))
   )
 
 
-
-
-;; See http://bzg.fr/emacs-hide-mode-line.html
-(defvar-local hidden-mode-line-mode nil)
-(defvar-local hide-mode-line nil)
-
-(define-minor-mode hidden-mode-line-mode
-  "Minor mode to hide the mode-line in the current buffer."
-  :init-value nil
-  :global nil
-  :variable hidden-mode-line-mode
-  :group 'editing-basics
-  (if hidden-mode-line-mode
-      (setq hide-mode-line mode-line-format
-            mode-line-format nil)
-    (setq mode-line-format hide-mode-line
-          hide-mode-line nil))
-  (force-mode-line-update)
-  ;; Apparently force-mode-line-update is not always enough to
-  ;; redisplay the mode-line
-  (redraw-display)
-  (when (and (called-interactively-p 'interactive)
-             hidden-mode-line-mode)
-    (run-with-idle-timer
-     0 nil 'message
-     (concat "Hidden Mode Line Mode enabled.  "
-             "Use M-x hidden-mode-line-mode to make the mode-line appear."))))
-
-;; Activate hidden-mode-line-mode
-;; (hidden-mode-line-mode 1)
-
-;; If you want to hide the mode-line in all new buffers
-;; (add-hook 'after-change-major-mode-hook 'hidden-mode-line-mode)
-
-;; Alternatively, you can paint your mode-line in White but then
-;; you'll have to manually paint it in black again
-;; (custom-set-faces
-;;  '(mode-line-highlight ((t nil)))
-;;  '(mode-line ((t (:foreground "white" :background "white"))))
-;;  '(mode-line-inactive ((t (:background "white" :foreground "white")))))
-
-
-
-;; A small minor mode to use a big fringe
-(defvar bzg-big-fringe-mode nil)
-(define-minor-mode bzg-big-fringe-mode
-  "Minor mode to use big fringe in the current buffer."
-  :init-value nil
-  :global t
-  :variable bzg-big-fringe-mode
-  :group 'editing-basics
-  (if (not bzg-big-fringe-mode)
-      (set-fringe-style nil)
-    (set-fringe-mode
-     (/ (- (frame-pixel-width)
-           (* 100 (frame-char-width)))
-        2))))
-
-;; Now activate this global minor mode
-;; (bzg-big-fringe-mode 1)
-
-;; To activate the fringe by default and deactivate it when windows
-;; are split vertically, uncomment this:
-;; (add-hook 'window-configuration-change-hook
-;;           (lambda ()
-;;             (if (delq nil
-;;                       (let ((fw (frame-width)))
-;;                         (mapcar (lambda(w) (< (window-width w) fw))
-;;                                 (window-list))))
-;;                 (bzg-big-fringe-mode 0)
-;;               (bzg-big-fringe-mode 1))))
-
-;; Use a minimal cursor
-;; (setq default-cursor-type 'hbar)
-
-
-;; Do not write anything past this comment. This is where Emacs will
-;; auto-generate custom variable definitions.
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -357,12 +376,44 @@ before layers configuration."
  '(ahs-idle-interval 0.25)
  '(ahs-idle-timer 0 t)
  '(ahs-inhibit-face-list nil)
+ '(org-crypt-disable-auto-save (quote encypt))
  '(paradox-github-token t)
- '(ring-bell-function (quote ignore) t))
+ '(ring-bell-function (quote ignore) t)
+ '(safe-local-variable-values
+   (quote
+    ((eval modify-syntax-entry 43 "'")
+     (eval modify-syntax-entry 36 "'")
+     (eval modify-syntax-entry 126 "'")
+     (encoding . utf-8)))))
+
+(defun cb-org:looking-at-pgp-section? ()
+  (unless (org-before-first-heading-p)
+    (save-excursion
+      (org-back-to-heading t)
+      (let ((heading-point (point))
+            (heading-was-invisible-p
+             (save-excursion
+               (outline-end-of-heading)
+               (outline-invisible-p))))
+        (forward-line)
+        (looking-at "-----BEGIN PGP MESSAGE-----")))))
+
+(defun cb-org:decrypt-entry ()
+  (when (cb-org:looking-at-pgp-section?)
+    (org-decrypt-entry)
+    t))
+
+(add-hook 'org-ctrl-c-ctrl-c-hook 'cb-org:decrypt-entry)
+
+;; Do not write anything past this comment. This is where Emacs will
+;; auto-generate custom variable definitions.
+
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(default ((t (:foreground "#bdbdb3" :background "gray13"))))
  '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
  '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))

@@ -15,7 +15,7 @@ export HISTFILESIZE=4500
 shopt -s histappend
 
 HGUSER="Patrick Hetu"
-EMAIL="patrick@koumbit.org"
+EMAIL="patrick.hetu@gmail.com"
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
@@ -66,16 +66,6 @@ c_tag=`color 1 34`
 c_off=`color 0 00`
 
 #PS1="${c_prompt}[\u@\h ${c_path}\W$c_branch\$(git_branch)$c_tag\$(git_tag)${c_prompt}]${c_off} "
-
-# set a fancy prompt (non-color, unless we know we "want" color)
-case "$TERM" in
-xterm-color)
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
-    ;;
-*)
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-    ;;
-esac
 
 # Comment in the above and uncomment this below for a color prompt
 #PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
@@ -129,7 +119,7 @@ alias rm='rm -i'
 
 # highlight $HOST:$PWD prompt
 PS1='\[\e[1m\]\h:\w\$\[\e[0m\] '
-PS1="\[\033[G\]${PS1}"
+#PS1="\[\e[1;36m\033[G\]${PS1}"
 #PS1='f$ '
 
 # GREP_COLOR=bright yellow on black bg.
@@ -149,19 +139,20 @@ alias ly="yokadi -d ~/.lyokadi.db"
 alias mv="mv -i"
 alias cp="cp -i"
 
-#Django command shortcuts 
-alias dj='python manage.py' 
-alias djr='dj runserver' 
-alias djrp='dj runserver_plus' 
-alias djdb='dj dbshell' 
-alias djs='dj shell' 
-alias djsp='dj shell_plus' 
-alias djt='dj test' 
-alias djm='dj migrate' 
+#Django command shortcuts
+alias dj='python manage.py'
+alias djr='dj runserver'
+alias djrp='dj runserver_plus'
+alias djdb='dj dbshell'
+alias djs='dj shell'
+alias djsp='dj shell_plus'
+alias djt='dj test'
+alias djm='dj migrate'
 alias djsm='dj startmigration'
 
 alias ai='sudo apt-get install -y'
 alias au='sudo apt-get update'
+alias ad='sudo apt-get dist-upgrade'
 
 #quick dir listing, latest files/dirs at the bottom
 alias l="rls -lrt"
@@ -196,6 +187,37 @@ if ! shopt -oq posix; then
   fi
 fi
 
+# from http://blog.kamilkisiel.net/
+pysource() {
+    $EDITOR $(python -c "import ${1}; import inspect; print inspect.getsourcefile(${1})")
+}
+
 export GOPATH=$HOME/repos/go
-export PATH=$PATH:$GOPATH/bin
+export PATH=$PATH:$GOPATH/bin:$HOME/bin/
 export MAXCPUS=2
+
+if [ -n "$GUIX_ENVIRONMENT" ]
+then
+export PS1="\u@\h \w [dev]\$ "
+fi
+
+#export JUJU_HOME=/home/juju/
+
+#check_virtualenv() {
+#    if [ -e bin/activate ]; then
+#        env=`basename $(pwd)`
+#        if [ "$env" != "${VIRTUAL_ENV##*/}" ]; then
+#            source bin/activate
+#        fi
+#    fi
+#}
+#venv_cd () {
+#    builtin cd "$@" && check_virtualenv
+#}
+## Call check_virtualenv in case opening directly into a directory (e.g
+## when opening a new tab in Terminal.app).
+#check_virtualenv
+#
+#alias cd="venv_cd"
+
+set completion-ignore-case on

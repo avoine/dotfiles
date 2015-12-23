@@ -1,11 +1,11 @@
-
+set nocompatible
 execute pathogen#infect()
 
 " Change les couleurs de la coloration syntaxique
 " colorscheme peachpuff
 "
 " Themes disponible:
-" blue default desert evening morning pablo shine torte 
+" blue default desert evening morning pablo shine torte
 " darkblue delek elflord koehler murphy peachpuff ron slate zellner
 
 " Change les couleurs de commentaire pour Cyan
@@ -25,7 +25,7 @@ setlocal spelllang=fr
 
 " Configuration de l'historique de travail sur un fichier
 " (recherche 10 termes, position dans le fichier, etc)
-set viminfo=/10,'10,r/mnt/zip,r/mnt/floppy,f0,h,\"100,:20,%
+set viminfo=/10,'10,r/mnt/zip,r/mnt/floppy,f0,h,\"100,:20,%,n~/.viminfo
 
 " Activation du repliage de paraphaphe selon la syntaxe du fichier
 set foldmethod=syntax
@@ -79,7 +79,6 @@ set ruler wildmenu
 set nocompatible
 
 " Active la détection du type de fichier et charge les plugins correspondant
-filetype on
 filetype plugin on
 
 " Active le Backspace de type deux"
@@ -112,11 +111,11 @@ set laststatus=2
 " Permet la navigation entre les fichiers ouverts sans sauvegarder
 set hid
 
-:au Filetype html,xhtml,xml,xsl set tabstop=2 shiftwidth=2 softtabstop=2
+au Filetype html,xhtml,xml,xsl set tabstop=2 shiftwidth=2 softtabstop=2
 
 " Déactive les backups d'édition
 set nobackup
-set nowb
+set nowritebackup
 set noswapfile
 
 noremap <Leader>m mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
@@ -133,7 +132,7 @@ augroup JumpCursorOnEdit
     \        let JumpCursorOnEdit_foo = JumpCursorOnEdit_foo - 1 |
     \        let b:doopenfold = 2 |
     \     endif |
-    \     exe JumpCursorOnEdit_foo |        
+    \     exe JumpCursorOnEdit_foo |
     \   endif |
     \ endif
   " Need to postpone using "zv" until after reading the modelines.
@@ -169,30 +168,25 @@ map ,u <ESC>yyp<c-v>$r
 map # gd
 
 " Permet l'ouverture et la fermeture des replis à l'aide de l'espace
-" 
-" If there is no fold at current line, just moves forward. 
-" If it is present, reverse it's state. 
-fun! ToggleFold() 
-    if foldlevel('.') == 0 
-        normal! l 
-    else 
-        if foldclosed('.') < 0 
-            . foldclose 
-        else 
-            . foldopen 
-        endif 
-    endif 
-    " Clear status line 
-    echo 
+"
+" If there is no fold at current line, just moves forward.
+" If it is present, reverse it's state.
+fun! ToggleFold()
+    if foldlevel('.') == 0
+        normal! l
+    else
+        if foldclosed('.') < 0
+            . foldclose
+        else
+            . foldopen
+        endif
+    endif
+    " Clear status line
+    echo
 endfun
 
-" Map this function to Space key. 
+" Map this function to Space key.
 noremap <space> :call ToggleFold()<CR>
-
-nmap <silent> <c-n> :NERDTreeToggle<CR>
-let NERDTreeQuitOnOpen = 1
-let g:xptemplate_key = '<s-Tab>'
-let g:xptemplate_always_show_pum = 1
 
 let g:LargeFile=10
 
@@ -225,13 +219,14 @@ let g:pymode_doc = 1
 let g:pymode_doc_key = 'K'
 
 ":au Filetype less let let b:current_syntax = "css"
-:au Filetype html UltiSnipsAddFiletypes django.snippet
+au Filetype html UltiSnipsAddFiletypes django.snippet
 hi SpellBad ctermbg=LightGray ctermfg=black
 hi PyFlakes ctermbg=LightGray ctermfg=black
-let g:khuno_ignore="E501,W293,E301,E302,E201,E202,E231,E225,"
+"let g:khuno_ignore="E501,W293,E301,E302,E201,E202,E231,E225,"
+let g:khuno_ignore="E711,E124,E501"
 
 inoremap <silent> <Bar>   <Bar><Esc>:call <SID>align()<CR>a
- 
+
 function! s:align()
   let p = '^\s*|\s.*\s|\s*$'
   if exists(':Tabularize') && getline('.') =~# '^\s*|' && (getline(line('.')-1) =~# p || getline(line('.')+1) =~# p)
@@ -243,4 +238,13 @@ function! s:align()
   endif
 endfunction
 
-set completeopt-=preview
+" make YCM compatible with UltiSnips (using supertab)
+let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
+let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
+let g:SuperTabDefaultCompletionType = '<C-n>'
+" better key bindings for UltiSnipsExpandTrigger
+let g:UltiSnipsExpandTrigger = "<tab>"
+let g:UltiSnipsJumpForwardTrigger = "<tab>"
+let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
+
+set paste
