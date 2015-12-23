@@ -15,7 +15,6 @@ export HISTFILESIZE=4500
 shopt -s histappend
 
 HGUSER="Patrick Hetu"
-EMAIL="patrick.hetu@gmail.com"
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
@@ -150,7 +149,7 @@ alias djt='dj test'
 alias djm='dj migrate'
 alias djsm='dj startmigration'
 
-alias ai='sudo apt-get install -y'
+alias ai='sudo apt-get install'
 alias au='sudo apt-get update'
 alias ad='sudo apt-get dist-upgrade'
 
@@ -170,11 +169,14 @@ alias u="cd .."
 alias ".."="cd .."
 alias bd='. bd -s'
 
+#alias tmux="TERM=screen-256color-bce tmux"
+
 export PAGER=less
 export EDITOR=vim
 export DEBFULLNAME='Patrick Hetu'
 export DEBEMAIL='patrick.hetu@gmail.com'
 export QUILT_PATCHES=debian/patches
+export TERM="xterm-256color"
 
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile

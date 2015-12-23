@@ -10,7 +10,7 @@ execute pathogen#infect()
 
 " Change les couleurs de commentaire pour Cyan
 " hi Comment ctermfg=DarkCyan guifg=Cyan
-hi Search ctermbg=LightGrey
+hi Search ctermbg=DarkGrey
 hi MatchParen ctermbg=LightGrey
 hi PyFlakes ctermbg=LightGrey
 
@@ -34,6 +34,8 @@ set foldlevelstart=20
 
 " Pour utilisation de la sourie pour déplacer le curseur
 "set mouse=a
+"set clipboard=unnamedplus
+
 " Permet de voir la commande en cours d'être inscite en bas à droite
 set showcmd
 
@@ -50,7 +52,6 @@ set expandtab
 
 " Indique que la touche tab espacera pour garder une bonne indentation
 set smarttab
-set expandtab
 
 " DéActivation de l'indentation automatique
 set noai

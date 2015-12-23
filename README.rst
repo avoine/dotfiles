@@ -1,0 +1,40 @@
+vim
+====
+
+::
+
+  closetag
+  ctrlp.vim
+  indenthtml.vim
+  InstantRst
+  investigate.vim
+  jedi-vim
+  khuno.vim
+  MatchTag
+  nerdcommenter
+  pyflakes-vim
+  riv
+  splitjoin.vim
+  supertab
+  tabular
+  tagbar
+  taglist
+  ultisnips
+  vim-airline
+  vim-ansible-yaml
+  vim-autotab
+  vim-css-color
+  vim-dispatch
+  vim-gnupg
+  vim-minimap
+  vim-over
+  vim-pathogen
+  vim-repeat
+  vim-snippets
+  vim-speeddating
+  vim-startify
+  vim-surround
+  vim-trailing-whitespace
+  vim-vinegar
+  vim-web-indent
+  xptemplate-dist
